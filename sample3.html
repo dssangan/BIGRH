@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+    <title>HTML5 Webcam Test</title>
+  </head>
+  <body>
+    <video id="sourcevid" autoplay="autoplay">Put your fallback message here.</video>
+    <div id="errorMessage"></div>
+    <script>
+	video = document.getElementById('sourcevid');
+    navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.getUserMedia; 
+    window.URL = window.URL || window.webkitURL;
+    function gotStream(stream){
+	  if (window.URL) {
+	      video.src = window.URL.createObjectURL(stream) || stream;
+		  video.play();
+	  } else {
+	    video.src = stream || stream; // Opera.
+		video.play();
+	  }
+
+  video.onerror = function(e) {
+    stream.stop();
+  };
+
+  stream.onended = noStream;
+}
+
+function noStream(e) {
+  var msg = 'No camera available.';
+  if (e.code == 1) {
+    msg = 'User denied access to use camera.';
+  }
+  document.getElementById('errorMessage').textContent = msg;
+}
+
+var options = {video: true, toString: function(){return 'video';}};
+
+navigator.getUserMedia(options, gotStream, noStream);
+    </script> 
+ </body>
+</html>
